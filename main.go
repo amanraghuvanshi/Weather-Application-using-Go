@@ -13,9 +13,15 @@ type apiConfigData struct {
 
 type weatherData struct {
 	Name string `json:"name"`
+
 	Main struct {
-		Kelvin float64 `json:"temp"`
+		Temp     float64 `json:"temp"`
+		Feels    float64 `json:"feels_like"`
+		Humidity int     `json:"humidity"`
 	} `json:"main"`
+	Additional struct {
+		Country string `json:"country"`
+	}
 }
 
 func loadApiConfig(filename string) (apiConfigData, error) {
@@ -41,7 +47,7 @@ func query(city string) (weatherData, error) {
 	if err != nil {
 		return weatherData{}, err
 	}
-	resp, err := http.Get("http://api.openweather.org/data/2.5/weather?APPID=" + apiConfig.OpenWeatherMapApiKey + "&q=" + city)
+	resp, err := http.Get("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiConfig.OpenWeatherMapApiKey)
 	if err != nil {
 		return weatherData{}, err
 	}
@@ -73,3 +79,4 @@ func main() {
 // Updated API CALL, use the latitude and longitude instead of strings
 // update the weather data also
 // https://api.openweathermap.org/data/2.5/weather?lat=44.34&lon=10.99&appid=<apiKey>
+// Use this : http://localhost:8080/weather/cityname
